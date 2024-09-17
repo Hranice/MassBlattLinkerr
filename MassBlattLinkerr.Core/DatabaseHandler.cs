@@ -171,12 +171,12 @@ namespace MassBlattLinkerr.Core
         /// <param name="articleName">Article name to search for.</param>
         /// <param name="printVersionName">Print version name to search for.</param>
         /// <returns>List of file paths that match the search criteria.</returns>
-        public List<string> SearchByArticleAndVersion(string articleName, string printVersionName)
+        public List<string> SearchByArticleAndVersion(string articleName, string? printVersionName = null)
         {
             // Validate input parameters
-            if (string.IsNullOrWhiteSpace(articleName) || string.IsNullOrWhiteSpace(printVersionName))
+            if (string.IsNullOrWhiteSpace(articleName))
             {
-                throw new ArgumentException("Article name and print version name cannot be null or empty.");
+                throw new ArgumentException("Article name cannot be null or empty.");
             }
 
             var results = new List<string>();

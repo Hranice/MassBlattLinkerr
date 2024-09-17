@@ -6,12 +6,7 @@ class Program
 {
     public static void Main(string[] args)
     {
-        //test
-
-        using var log = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File("log.txt")
-            .CreateLogger();
+        ILogger log = InitializeLogger();
 
         log.Information("Zahajuji operaci...");
 
@@ -21,7 +16,7 @@ class Program
                 ProcessExcelFile(
                 @"Z:\Plan\Plan vyroby\Plánování\2024\plánování_2024_nové.xlsm",
                 Path.GetTempPath() + Guid.NewGuid().ToString() + ".xlsm",
-                Process.GetCurrentProcess().MainModule.FileName
+                Environment.ProcessPath
                 );
         }
         else
@@ -40,6 +35,7 @@ class Program
 
                 var articleHandler = new ArticleHandler();
                 var articleWithPrintVersion = articleHandler.ExtractArticleAndVersion(cellValue);
+                log.Information("Naformátovaná hodnota: {article}.{printversion}", articleWithPrintVersion.Item1, articleWithPrintVersion.Item2);
                 var matchedPrintVersionPaths = dbHandler.SearchByArticleAndVersion(articleWithPrintVersion.Item1, articleWithPrintVersion.Item2);
 
                 foreach (var matchedPrintVersionPath in matchedPrintVersionPaths)
@@ -52,12 +48,28 @@ class Program
 
                     catch
                     {
-                        string matchedPrintVersionPathDirectory = Path.GetDirectoryName(matchedPrintVersionPath);
+                        string? matchedPrintVersionPathDirectory = Path.GetDirectoryName(matchedPrintVersionPath);
                         log.Warning("Nepodařilo se otevřít soubor. Otevírám složku {matchedPrintVersionPathDirectory}", matchedPrintVersionPathDirectory);
-                        Process.Start(new ProcessStartInfo(matchedPrintVersionPathDirectory) { UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo(matchedPrintVersionPathDirectory ?? throw new ArgumentNullException(nameof(matchedPrintVersionPathDirectory)))
+                        {
+                            UseShellExecute = true
+                        });
+
                     }
                 }
             }
         }
     }
+
+    static ILogger InitializeLogger()
+    {
+        string exePath = AppDomain.CurrentDomain.BaseDirectory;
+        string logFilePath = Path.Combine(exePath, "log.txt");
+
+        return new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File(logFilePath)
+            .CreateLogger();
+    }
+
 }
