@@ -8,12 +8,20 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+    <AvaloniaXaml Remove="Assets\**" />
+    <Compile Remove="Assets\**" />
+    <EmbeddedResource Remove="Assets\**" />
+    <None Remove="Assets\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MassBlattLinker.UI\MassBlattLinker.UI.csproj" />
+    <PackageReference Include="Avalonia" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Svg" Version="11.1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AvaloniaTestingApp\AvaloniaTestingApp.csproj" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ class Program
         {
             new ExcelHandler(log).
                 ProcessExcelFile(
-                @"Z:\Plan\Plan vyroby\Plánování\2024\plánování_2024_nové.xlsm",
+                @"Z:\Plan\Plan vyroby\Plánování\2025\plánování_2025_nové.xlsm",
                 Path.GetTempPath() + Guid.NewGuid().ToString() + ".xlsm",
                 Environment.ProcessPath
                 );
